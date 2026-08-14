@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#o#",
+    "=N=",
+    "#=#"
+  ],
+  "key": {
+    "#": "minecraft:redstone_block",
+    "o": "minecraft:ender_pearl",
+    "=": "minecraft:gold_ingot",
+    "N": "minecraft:netherite_block"
+  },
+  "result": {
+    "id": "daedalic-replication:replicator"
+  }
+}

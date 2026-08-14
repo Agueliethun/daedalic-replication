@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "daedalic-replication:block/replicator"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "daedalic-replication",
+	"version": "${version}",
+	"name": "Daedalic Replication",
+	"description": "Provides an easy way to generate just about any block using energy and time.",
+	"authors": [
+		"Matthew Nykamp"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/daedalic-replication/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.daereplication.DaedalicReplication"
+		],
+		"client": [
+			"com.daereplication.client.DaedalicReplicationClient"
+		]
+	},
+	"mixins": [
+		"daedalic-replication.mixins.json",
+		{
+			"config": "daedalic-replication.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"team_reborn_energy": ">=5.0.0"
+	}
+}

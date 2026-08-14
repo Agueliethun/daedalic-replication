@@ -1,0 +1,11 @@
+{
+  "item.daedalic-replication.replication_model": "Replication Model",
+  "item.daedalic-replication.replication_model.info.number": "%1$s ingested: %2$s",
+  "item.daedalic-replication.replication_model.info.efficiency": "Efficiency: %1$s",
+  "item.daedalic-replication.replication_model.info.erase": "Crouch + Right Click to reset data.",
+  "item.daedalic-replication.replication_model.info.empty": "Insert into a Replicator with a valid input block to begin data ingestion.",
+
+  "block.daedalic-replication.replicator": "Replicator",
+
+  "menu.daedalic-replication.replicator.screen.input": "Training Input"
+}
