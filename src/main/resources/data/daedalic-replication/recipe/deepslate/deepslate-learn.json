@@ -1,0 +1,10 @@
+{
+  "type": "daedalic-replication:replication-learn",
+  "input": "minecraft:deepslate",
+  "output": {
+    "id": "minecraft:deepslate"
+  },
+  "energy": 10,
+  "time": 200,
+  "progress": 1
+}

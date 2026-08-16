@@ -7,5 +7,5 @@
 
   "block.daedalic-replication.replicator": "Replicator",
 
-  "menu.daedalic-replication.replicator.screen.input": "Training Input"
+  "item.daedalic-replication.generic_energy.info": "%1$s EU stored"
 }

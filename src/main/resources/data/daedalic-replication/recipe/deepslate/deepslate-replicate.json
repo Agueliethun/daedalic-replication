@@ -1,0 +1,7 @@
+{
+  "type": "daedalic-replication:replication-replicate",
+  "input": "minecraft:deepslate",
+  "energy": 5,
+  "time": 20,
+  "learnFactor": 2
+}

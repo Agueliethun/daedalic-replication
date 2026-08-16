@@ -2,21 +2,67 @@ package com.daereplication.blocks;
 
 import com.daereplication.blockentities.DRBlockEntities;
 import com.daereplication.blockentities.ReplicatorBlockEntity;
+import com.daereplication.component.DRDataComponents;
+import com.daereplication.component.GenericEnergyStorage;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 public class ReplicatorBlock extends BaseEntityBlock {
+
+    public static final BooleanProperty HAS_MODEL = BooleanProperty.create("has_model");
 
     protected ReplicatorBlock(Properties properties) {
         super(properties);
+        registerDefaultState(defaultBlockState().setValue(HAS_MODEL, false));
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
+        super.setPlacedBy(level, pos, state, by, itemStack);
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        BlockEntity be = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (be instanceof ReplicatorBlockEntity) {
+            ItemStack drop = new ItemStack(this.asItem());
+            GenericEnergyStorage component = new GenericEnergyStorage(((ReplicatorBlockEntity)be).getEnergyStorage().getAmount());
+            drop.set(DRDataComponents.GENERIC_ENERGY_STORAGE, component);
+            return List.of(drop);
+        }
+
+        return List.of(new ItemStack(this.asItem()));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(HAS_MODEL);
+    }
+
+    public static int getLuminance(BlockState blockState) {
+        boolean hasModel = blockState.getValue(ReplicatorBlock.HAS_MODEL);
+
+        return hasModel ? 12 : 0;
     }
 
     @Override

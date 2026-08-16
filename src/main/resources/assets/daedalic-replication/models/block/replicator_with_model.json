@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "daedalic-replication:block/replicator_side_bottom",
+    "side": "daedalic-replication:block/replicator_side_bottom",
+    "top": "daedalic-replication:block/replicator_top_active"
+  }
+}

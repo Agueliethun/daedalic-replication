@@ -23,7 +23,7 @@ public class ReplicationLearnRecipe implements Recipe<ReplicationLearnRecipeInpu
             ItemStackTemplate.CODEC.fieldOf("output").forGetter(ReplicationLearnRecipe::getOutput),
             Codec.INT.fieldOf("energy").forGetter(ReplicationLearnRecipe::getEnergy),
             Codec.INT.fieldOf("time").forGetter(ReplicationLearnRecipe::getTime),
-            Codec.INT.fieldOf("learnFactor").forGetter(ReplicationLearnRecipe::getLearnFactor)
+            Codec.INT.fieldOf("progress").forGetter(ReplicationLearnRecipe::getProgress)
         ).apply(instance, ReplicationLearnRecipe::new)
     );
 
@@ -37,13 +37,13 @@ public class ReplicationLearnRecipe implements Recipe<ReplicationLearnRecipeInpu
         ByteBufCodecs.INT,
         ReplicationLearnRecipe::getTime,
         ByteBufCodecs.INT,
-        ReplicationLearnRecipe::getLearnFactor,
+        ReplicationLearnRecipe::getProgress,
         ReplicationLearnRecipe::new
     );
 
     public static final RecipeSerializer<ReplicationLearnRecipe> SERIALIZER = Registry.register(
         BuiltInRegistries.RECIPE_SERIALIZER,
-        Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "replication-learn"),
+        Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, DRRecipeTypes.REPLICATION_LEARN_PATH),
         new RecipeSerializer<>(ReplicationLearnRecipe.MAP_CODEC, ReplicationLearnRecipe.STREAM_CODEC)
     );
 
@@ -51,16 +51,16 @@ public class ReplicationLearnRecipe implements Recipe<ReplicationLearnRecipeInpu
     private final ItemStackTemplate output;
     private final int energy;
     private final int time;
-    private final int learnFactor;
+    private final int progress;
 
     public static void init() {}
 
-    public ReplicationLearnRecipe(Ingredient input, ItemStackTemplate output, int energy, int time, int learnFactor) {
+    public ReplicationLearnRecipe(Ingredient input, ItemStackTemplate output, int energy, int time, int progress) {
         this.input = input;
         this.output = output;
         this.energy = energy;
         this.time = time;
-        this.learnFactor = learnFactor;
+        this.progress = progress;
     }
 
     public Ingredient getInput() {
@@ -79,8 +79,8 @@ public class ReplicationLearnRecipe implements Recipe<ReplicationLearnRecipeInpu
         return time;
     }
 
-    public int getLearnFactor() {
-        return learnFactor;
+    public int getProgress() {
+        return progress;
     }
 
     @Override

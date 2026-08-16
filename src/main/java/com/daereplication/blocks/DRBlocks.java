@@ -47,5 +47,6 @@ public class DRBlocks {
                     .sound(SoundType.NETHERITE_BLOCK)
                     .requiresCorrectToolForDrops()
                     .destroyTime(1.0f)
+                    .lightLevel(ReplicatorBlock::getLuminance)
     );
 }

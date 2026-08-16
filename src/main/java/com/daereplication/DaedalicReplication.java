@@ -6,6 +6,7 @@ import com.daereplication.blocks.DRBlocks;
 import com.daereplication.items.DRItemIds;
 import com.daereplication.recipe.DRRecipeTypes;
 import com.daereplication.recipe.ReplicationLearnRecipe;
+import com.daereplication.recipe.ReplicationReplicateRecipe;
 import com.daereplication.registry.DRRegistries;
 import com.daereplication.util.ReplicatorUtil;
 import net.fabricmc.api.ModInitializer;
@@ -34,9 +35,8 @@ public class DaedalicReplication implements ModInitializer {
 
 		LOGGER.info(DaedalicReplication.MOD_ID + " onInitialize");
 
-//		DRRegistries.init();
-
 		ReplicationLearnRecipe.init();
+		ReplicationReplicateRecipe.init();
 
 		DRDataComponents.init();
 		DRItemIds.init();
@@ -45,6 +45,7 @@ public class DaedalicReplication implements ModInitializer {
 		DRRecipeTypes.init();
 
 		ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, DRDataComponents.REPLICATION_BLOCK_STORAGE);
+		ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, DRDataComponents.GENERIC_ENERGY_STORAGE);
 	}
 
 	public static Identifier id(String path) {

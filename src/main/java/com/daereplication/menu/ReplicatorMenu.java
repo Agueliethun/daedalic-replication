@@ -34,6 +34,7 @@ import static com.daereplication.blockentities.ReplicatorBlockEntity.SLOT_LEARNE
 public class ReplicatorMenu extends AbstractContainerMenu {
 
     private final static int SLOTS_COUNT = 3;
+    private final static int DATA_COUNT = 6;
 
     private static final int INVENTORY_START_X = 8;
     private static final int INVENTORY_START_Y = 84;
@@ -44,34 +45,53 @@ public class ReplicatorMenu extends AbstractContainerMenu {
     private static final int INVENTORY_END = INVENTORY_START + Inventory.INVENTORY_SIZE;
 
     private final Container container;
+    private final ContainerData data;
     protected final Level level;
 
-    private final RecipeManager.CachedCheck<ReplicationLearnRecipeInput, ReplicationLearnRecipe> quickCheck;
-
     public ReplicatorMenu(final int containerId, final Inventory inventory) {
-        this(containerId, inventory, new SimpleContainer(SLOTS_COUNT));
+        this(containerId, inventory, new SimpleContainer(SLOTS_COUNT), new SimpleContainerData(DATA_COUNT));
     }
 
-    public ReplicatorMenu(final int containerId, final Inventory inventory, final Container container) {
+    public ReplicatorMenu(final int containerId, final Inventory inventory, final Container container, final ContainerData data) {
         super(DRMenuTypes.REPLICATOR, containerId);
-        this.quickCheck = RecipeManager.createCheck(DRRecipeTypes.REPLICATION_LEARN_RECIPE_TYPE);
 
         checkContainerSize(container, SLOTS_COUNT);
+        checkContainerDataCount(data, DATA_COUNT);
 
         this.container = container;
+        this.data = data;
         this.level = inventory.player.level();
 
         container.startOpen(inventory.player);
 
-        this.addSlot(new ReplicatorInputSlot(this, container, SLOT_INPUT, 22, 47));
-        this.addSlot(new ReplicatorLearnerSlot(container, SLOT_LEARNER, 80, 47));
-        this.addSlot(new ReplicatorOutputSlot(container, ReplicatorBlockEntity.SLOT_OUTPUT, 138, 47));
+        this.addSlot(new ReplicatorInputSlot(this, container, SLOT_INPUT, 22, 27));
+        this.addSlot(new ReplicatorLearnerSlot(container, SLOT_LEARNER, 80, 27));
+        this.addSlot(new ReplicatorOutputSlot(container, ReplicatorBlockEntity.SLOT_OUTPUT, 138, 27));
 
         this.addStandardInventorySlots(inventory, INVENTORY_START_X, INVENTORY_START_Y);
+        this.addDataSlots(data);
     }
 
     public boolean isInput(ItemStack itemStack) {
         return !itemStack.is(DRItemIds.REPLICATION_MODEL);
+    }
+
+    public float getLearnProgress() {
+        int progress = data.get(ReplicatorBlockEntity.DATA_LEARN_PROGRESS);
+        int totalTime = data.get(ReplicatorBlockEntity.DATA_LEARN_TOTAL_TIME);
+        return totalTime == 0 ? 0 : progress / (float)totalTime;
+    }
+
+    public float getReplicateProgress() {
+        int progress = data.get(ReplicatorBlockEntity.DATA_REPLICATE_PROGRESS);
+        int totalTime = data.get(ReplicatorBlockEntity.DATA_REPLICATE_TOTAL_TIME);
+        return totalTime == 0 ? 0 : progress / (float)totalTime;
+    }
+
+    public float getPowerPercent() {
+        int power = data.get(ReplicatorBlockEntity.DATA_POWER_AMOUNT);
+        int powerCapacity = data.get(ReplicatorBlockEntity.DATA_POWER_MAX);
+        return powerCapacity == 0 ? 0 : power / (float)powerCapacity;
     }
 
     @Override

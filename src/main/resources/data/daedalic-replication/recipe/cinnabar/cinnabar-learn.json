@@ -4,7 +4,7 @@
   "output": {
     "id": "minecraft:cinnabar"
   },
-  "time": 200,
   "energy": 10,
-  "learnFactor": 32
+  "time": 200,
+  "progress": 1
 }

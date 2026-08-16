@@ -16,4 +16,10 @@ public class DRDataComponents {
             Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "replication_block_storage"),
             DataComponentType.<ReplicationBlockStorage>builder().persistent(ReplicationBlockStorage.CODEC).build()
     );
+
+    public static final DataComponentType<GenericEnergyStorage> GENERIC_ENERGY_STORAGE = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "generic_energy_storage"),
+            DataComponentType.<GenericEnergyStorage>builder().persistent(GenericEnergyStorage.CODEC).build()
+    );
 }

@@ -1,6 +1,9 @@
 {
   "variants": {
-    "": {
+    "has_model=true": {
+      "model": "daedalic-replication:block/replicator_with_model"
+    },
+    "has_model=false": {
       "model": "daedalic-replication:block/replicator"
     }
   }

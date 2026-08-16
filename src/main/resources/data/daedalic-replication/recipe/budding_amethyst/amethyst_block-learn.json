@@ -1,0 +1,10 @@
+{
+  "type": "daedalic-replication:replication-learn",
+  "input": "minecraft:amethyst_block",
+  "output": {
+    "id": "minecraft:budding_amethyst"
+  },
+  "energy": 10,
+  "time": 200,
+  "progress": 4
+}
