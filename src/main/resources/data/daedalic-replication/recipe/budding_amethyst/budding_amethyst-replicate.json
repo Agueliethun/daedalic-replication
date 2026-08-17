@@ -1,7 +1,0 @@
-{
-  "type": "daedalic-replication:replication-replicate",
-  "input": "minecraft:budding_amethyst",
-  "energy": 200,
-  "time": 100,
-  "learnFactor": 32
-}

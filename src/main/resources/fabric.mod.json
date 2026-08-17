@@ -16,6 +16,9 @@
 		],
 		"client": [
 			"com.daereplication.client.DaedalicReplicationClient"
+		],
+		"fabric-datagen": [
+			"com.daereplication.datagen.DRDataGenerator"
 		]
 	},
 	"mixins": [
