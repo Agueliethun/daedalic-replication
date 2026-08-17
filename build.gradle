@@ -21,6 +21,7 @@ loom {
 }
 
 fabricApi {
+	configureDataGeneration()
 }
 
 dependencies {
@@ -31,13 +32,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-//	// Tech Reborn for energy
-	implementation api("teamreborn:energy:${project.tr_energy_version}")
-//	implementation "teamreborn:energy:${project.tr_energy_version}" {
-//		transitive = false
-//	}
-
-//	implementation "TechReborn:TechReborn-26.2:${project.tech_reborn_version}"
+	// Tech Reborn for energy
+	include api("teamreborn:energy:${project.tr_energy_version}")
 }
 
 processResources {

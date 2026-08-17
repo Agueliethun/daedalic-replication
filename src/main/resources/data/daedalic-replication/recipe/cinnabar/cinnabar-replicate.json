@@ -1,7 +1,0 @@
-{
-  "type": "daedalic-replication:replication-replicate",
-  "input": "minecraft:cinnabar",
-  "energy": 10,
-  "time": 80,
-  "learnFactor": 10
-}
