@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jspecify.annotations.NonNull;
 
-public record ReplicationLearnRecipeInput(ItemStack learner, ItemStack input, long power) implements RecipeInput {
+public record ReplicationLearnRecipeInput(ItemStack learner, ItemStack input) implements RecipeInput {
 
     @Override
     public ItemStack learner() {
@@ -15,11 +15,6 @@ public record ReplicationLearnRecipeInput(ItemStack learner, ItemStack input, lo
     @Override
     public ItemStack input() {
         return input;
-    }
-
-    @Override
-    public long power() {
-        return power;
     }
 
     @Override

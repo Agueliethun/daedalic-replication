@@ -5,6 +5,9 @@
   "item.daedalic-replication.replication_model.info.erase": "Crouch + Right Click to reset data.",
   "item.daedalic-replication.replication_model.info.empty": "Insert into a Replicator with a valid input block to begin data ingestion.",
 
+  "daedalic-replication.gui.learn.title": "Replication Learning",
+  "daedalic-replication.gui.replicate.title": "Replication",
+
   "block.daedalic-replication.replicator": "Replicator",
 
   "item.daedalic-replication.generic_energy.info": "%1$s EU stored"

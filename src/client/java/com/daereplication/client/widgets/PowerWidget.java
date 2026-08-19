@@ -12,10 +12,10 @@ import net.minecraft.resources.Identifier;
 
 public class PowerWidget extends AbstractWidget {
 
-    private final static int IMAGE_WIDTH = 122;
-    private final static int IMAGE_HEIGHT = 21;
+    private static final int IMAGE_WIDTH = 122;
+    private static final int IMAGE_HEIGHT = 21;
 
-    private final static float LERP_SPEED = 0.25F;
+    private static final float LERP_SPEED = 0.25F;
 
     private float lastPower;
     private float power;

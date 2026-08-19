@@ -12,6 +12,7 @@ import com.daereplication.util.ReplicatorUtil;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -37,6 +38,9 @@ public class DaedalicReplication implements ModInitializer {
 
 		ReplicationLearnRecipe.init();
 		ReplicationReplicateRecipe.init();
+
+		RecipeSynchronization.synchronizeRecipeSerializer(ReplicationLearnRecipe.SERIALIZER);
+		RecipeSynchronization.synchronizeRecipeSerializer(ReplicationReplicateRecipe.SERIALIZER);
 
 		DRDataComponents.init();
 		DRItemIds.init();

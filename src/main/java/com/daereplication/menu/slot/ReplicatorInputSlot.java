@@ -18,9 +18,4 @@ public class ReplicatorInputSlot extends Slot {
     public boolean mayPlace(final ItemStack itemStack) {
         return this.menu.isInput(itemStack);
     }
-
-    @Override
-    public int getMaxStackSize(final ItemStack itemStack) {
-        return 2048;
-    }
 }

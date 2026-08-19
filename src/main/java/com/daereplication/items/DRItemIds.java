@@ -6,6 +6,7 @@ import com.daereplication.component.ReplicationBlockStorage;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -13,6 +14,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantable;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.function.Function;
 
@@ -35,8 +39,12 @@ public class DRItemIds {
     public static final ResourceKey<Item> REPLICATION_MODEL_RESOURCE_KEY = create("replication_model");
 
     private static final Function<Item.Properties, Item> REPLICATION_MODEL_FACTORY = (properties ->
-            new ReplicationModel(properties.delayedComponent(DRDataComponents.REPLICATION_BLOCK_STORAGE, a ->
-                    new ReplicationBlockStorage(0, 0.0, null))
+            new ReplicationModel(
+                    properties
+                            .delayedComponent(DRDataComponents.REPLICATION_BLOCK_STORAGE, a ->
+                                    new ReplicationBlockStorage(0, 0.0, null))
+                            .delayedComponent(DataComponents.ENCHANTABLE, a -> new Enchantable(100))
+                            .delayedComponent(DataComponents.ENCHANTMENTS, a -> ItemEnchantments.EMPTY)
             )
     );
 

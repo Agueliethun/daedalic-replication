@@ -33,8 +33,8 @@ import static com.daereplication.blockentities.ReplicatorBlockEntity.SLOT_LEARNE
 
 public class ReplicatorMenu extends AbstractContainerMenu {
 
-    private final static int SLOTS_COUNT = 3;
-    private final static int DATA_COUNT = 6;
+    private static final int SLOTS_COUNT = 3;
+    private static final int DATA_COUNT = 6;
 
     private static final int INVENTORY_START_X = 8;
     private static final int INVENTORY_START_Y = 84;
@@ -112,7 +112,7 @@ public class ReplicatorMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else {
-            if (!this.moveItemStackTo(stack, CONTAINER_START, CONTAINER_END, false)) {
+            if (!this.moveItemStackTo(stack, CONTAINER_START, CONTAINER_END - 1, false)) {
                 return ItemStack.EMPTY;
             }
         }

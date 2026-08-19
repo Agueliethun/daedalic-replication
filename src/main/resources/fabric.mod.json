@@ -19,6 +19,15 @@
 		],
 		"fabric-datagen": [
 			"com.daereplication.datagen.DRDataGenerator"
+		],
+		"jei_mod_plugin": [
+			"com.daereplication.client.jei.DRJEIPlugin"
+		],
+		"rei_client": [
+			"com.daereplication.client.rei.DRREIClientPlugin"
+		],
+		"rei_common": [
+			"com.daereplication.rei.DRREICommonPlugin"
 		]
 	},
 	"mixins": [

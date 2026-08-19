@@ -14,4 +14,12 @@ public class ReplicatorUtil {
 
         return numStored / (numStored + (double)recipe.getLearnFactor());
     }
+
+    public static double getEfficiencyForEnchantLevel(int enchLevel) {
+        return 1.0 - (enchLevel / (enchLevel + 3.0));
+    }
+
+    public static double getDoubleChanceForFortuneLevel(int fortLevel) {
+        return (fortLevel / (fortLevel + 3.0));
+    }
 }
