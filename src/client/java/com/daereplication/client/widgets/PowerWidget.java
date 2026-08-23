@@ -3,8 +3,8 @@ package com.daereplication.client.widgets;
 import com.daereplication.DaedalicReplication;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -17,20 +17,21 @@ public class PowerWidget extends AbstractWidget {
 
     private static final float LERP_SPEED = 0.25F;
 
-    private float lastPower;
-    private float power;
+    private float lastPowerLerp;
+
+    private long power;
+    private long max;
 
     private final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "/textures/gui/sprites/container/power_background.png");
-    private final Identifier FOREGROUND_TEXTURE = Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "container/power_foreground");
+    private final Identifier FOREGROUND_SPRITE = Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "container/power_foreground");
 
-    public PowerWidget(int x, int y, int width, int height, float power) {
+    public PowerWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
-        this.power = power;
-        this.lastPower = power;
     }
 
-    public void setPower(float powerPercent) {
-        this.power = powerPercent;
+    public void updatePower(long power, long max) {
+        this.power = power;
+        this.max = max;
     }
 
     @Override
@@ -40,16 +41,19 @@ public class PowerWidget extends AbstractWidget {
     @Override
     protected void extractTooltipForNextRenderPass(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltipForNextRenderPass(graphics, mouseX, mouseY);
+
+        this.setTooltip(Tooltip.create(Component.translatable("deadalic-replication.gui.power", power, max)));
     }
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        float newPower = lastPower == 0.0F ? power : LERP_SPEED * lastPower + (1 - LERP_SPEED) * power;
+        float percent = power / (float)max;
+        float newPower = lastPowerLerp == 0.0F ? percent : LERP_SPEED * lastPowerLerp + (1 - LERP_SPEED) * percent;
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), IMAGE_WIDTH, IMAGE_HEIGHT);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FOREGROUND_TEXTURE, getWidth(), getHeight(), 0, 0, getX(), getY(), (int)Math.ceil(IMAGE_WIDTH * newPower), IMAGE_HEIGHT);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FOREGROUND_SPRITE, getWidth(), getHeight(), 0, 0, getX(), getY(), (int)Math.ceil(IMAGE_WIDTH * newPower), IMAGE_HEIGHT);
 
-        this.lastPower = newPower;
+        this.lastPowerLerp = newPower;
     }
 
     @Override

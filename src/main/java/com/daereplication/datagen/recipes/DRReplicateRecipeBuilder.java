@@ -46,6 +46,12 @@ public class DRReplicateRecipeBuilder implements DRRecipeBuilder<ReplicationRepl
         return this;
     }
 
+    public DRReplicateRecipeBuilder withTotalEnergyAndTime(int energy, int time) {
+        this.energy = energy / time;
+        this.time = time;
+        return this;
+    }
+
     public DRReplicateRecipeBuilder withLearnFactor(int learnFactor) {
         this.learnFactor = learnFactor;
         return this;

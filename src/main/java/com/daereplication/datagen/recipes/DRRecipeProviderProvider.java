@@ -260,24 +260,21 @@ public class DRRecipeProviderProvider extends FabricRecipeProvider {
                 .withEnergy(40)
                 .withTime(DRLearnRecipeBuilder.TIME_HIGH);
         createReplicateRecipe("p_froglight", getItemHolder(registries, BlockItemIds.PEARLESCENT_FROGLIGHT.item()))
-                .withEnergy(160)
-                .withTime(500)
+                .withTotalEnergyAndTime(80000, 100)
                 .withLearnFactor(8);
 
         createLearnRecipe("o_froglight", Ingredient.of(Items.OCHRE_FROGLIGHT), Items.OCHRE_FROGLIGHT)
                 .withEnergy(40)
                 .withTime(DRLearnRecipeBuilder.TIME_HIGH);
         createReplicateRecipe("o_froglight", getItemHolder(registries, BlockItemIds.OCHRE_FROGLIGHT.item()))
-                .withEnergy(160)
-                .withTime(500)
+                .withTotalEnergyAndTime(80000, 100)
                 .withLearnFactor(8);
 
         createLearnRecipe("v_froglight", Ingredient.of(Items.VERDANT_FROGLIGHT), Items.VERDANT_FROGLIGHT)
                 .withEnergy(40)
                 .withTime(DRLearnRecipeBuilder.TIME_HIGH);
         createReplicateRecipe("v_froglight", getItemHolder(registries, BlockItemIds.VERDANT_FROGLIGHT.item()))
-                .withEnergy(160)
-                .withTime(500)
+                .withTotalEnergyAndTime(80000, 100)
                 .withLearnFactor(8);
 
         // Dragon Head
@@ -300,8 +297,7 @@ public class DRRecipeProviderProvider extends FabricRecipeProvider {
         createLearnRecipe("elytra", Ingredient.of(Items.ELYTRA), Items.ELYTRA)
                 .withEnergy(60);
         createReplicateRecipe("elytra", getItemHolder(registries, ItemIds.ELYTRA))
-                .withEnergy(240)
-                .withTime(DRReplicateRecipeBuilder.TIME_HIGH)
+                .withTotalEnergyAndTime(50000, 200)
                 .withLearnFactor(2);
 
         // Heart of the Sea
@@ -320,12 +316,13 @@ public class DRRecipeProviderProvider extends FabricRecipeProvider {
                 .withTime(DRReplicateRecipeBuilder.TIME_HIGH)
                 .withLearnFactor(2);
 
+        int coalEnergy = 2000;
+
         // Bucket of Lava
         createLearnRecipe("bucket_of_lava", Ingredient.of(Items.LAVA_BUCKET), Items.LAVA_BUCKET)
                 .withEnergy(20);
         createReplicateRecipe("bucket_of_lava", getItemHolder(registries, ItemIds.LAVA_BUCKET))
-                .withEnergy(100)
-                .withTime(DRReplicateRecipeBuilder.TIME_HIGH)
+                .withTotalEnergyAndTime(coalEnergy * 8, DRReplicateRecipeBuilder.TIME_HIGH)
                 .withLearnFactor(2);
 
         // Dirt
@@ -440,6 +437,81 @@ public class DRRecipeProviderProvider extends FabricRecipeProvider {
         createReplicateRecipe("pink", getItemHolder(registries, ItemIds.DYE.pink()));
 
         // Ores
+        createLearnRecipe("coal_ore", Ingredient.of(Items.COAL_ORE), Items.COAL_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_coal_ore", Ingredient.of(Items.DEEPSLATE_COAL_ORE), Items.COAL_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("coal_ore", getItemHolder(registries, BlockItemIds.COAL_ORE.item()))
+                .withTotalEnergyAndTime(coalEnergy, DRReplicateRecipeBuilder.TIME_MEDIUM);
+
+        createLearnRecipe("copper_ore", Ingredient.of(Items.COPPER_ORE), Items.COPPER_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_copper_ore", Ingredient.of(Items.DEEPSLATE_COPPER_ORE), Items.COPPER_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("copper_ore", getItemHolder(registries, BlockItemIds.COPPER_ORE.item()))
+                .withEnergy(50);
+
+        createLearnRecipe("iron_ore", Ingredient.of(Items.IRON_ORE), Items.IRON_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_iron_ore", Ingredient.of(Items.DEEPSLATE_IRON_ORE), Items.IRON_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("iron_ore", getItemHolder(registries, BlockItemIds.IRON_ORE.item()))
+                .withEnergy(60);
+
+        createLearnRecipe("iron_ore", Ingredient.of(Items.IRON_ORE), Items.IRON_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_iron_ore", Ingredient.of(Items.DEEPSLATE_IRON_ORE), Items.IRON_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("iron_ore", getItemHolder(registries, BlockItemIds.IRON_ORE.item()))
+                .withEnergy(60);
+
+        createLearnRecipe("quartz_ore", Ingredient.of(Items.NETHER_QUARTZ_ORE), Items.NETHER_QUARTZ_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("quartz_ore", getItemHolder(registries, BlockItemIds.NETHER_QUARTZ_ORE.item()))
+                .withEnergy(60);
+
+        createLearnRecipe("gold_ore", Ingredient.of(Items.GOLD_ORE), Items.GOLD_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_gold_ore", Ingredient.of(Items.DEEPSLATE_GOLD_ORE), Items.GOLD_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("n_gold_ore", Ingredient.of(Items.NETHER_GOLD_ORE), Items.GOLD_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("gold_ore", getItemHolder(registries, BlockItemIds.GOLD_ORE.item()))
+                .withEnergy(80);
+
+        createLearnRecipe("redstone_ore", Ingredient.of(Items.REDSTONE_ORE), Items.REDSTONE_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_redstone_ore", Ingredient.of(Items.DEEPSLATE_REDSTONE_ORE), Items.REDSTONE_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("redstone_ore", getItemHolder(registries, BlockItemIds.REDSTONE_ORE.item()))
+                .withEnergy(80);
+
+        createLearnRecipe("lapis_ore", Ingredient.of(Items.LAPIS_ORE), Items.LAPIS_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_lapis_ore", Ingredient.of(Items.DEEPSLATE_LAPIS_ORE), Items.LAPIS_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("lapis_ore", getItemHolder(registries, BlockItemIds.LAPIS_ORE.item()))
+                .withEnergy(80);
+
+        createLearnRecipe("emerald_ore", Ingredient.of(Items.EMERALD_ORE), Items.EMERALD_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_emerald_ore", Ingredient.of(Items.DEEPSLATE_EMERALD_ORE), Items.EMERALD_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("emerald_ore", getItemHolder(registries, BlockItemIds.EMERALD_ORE.item()))
+                .withEnergy(150);
+
+        createLearnRecipe("diamond_ore", Ingredient.of(Items.DIAMOND_ORE), Items.DIAMOND_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createLearnRecipe("ds_diamond_ore", Ingredient.of(Items.DEEPSLATE_DIAMOND_ORE), Items.DIAMOND_ORE)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("diamond_ore", getItemHolder(registries, BlockItemIds.DIAMOND_ORE.item()))
+                .withEnergy(150);
+
+        createLearnRecipe("ancient_debris", Ingredient.of(Items.ANCIENT_DEBRIS), Items.ANCIENT_DEBRIS)
+                .withTime(DRLearnRecipeBuilder.TIME_HIGH);
+        createReplicateRecipe("ancient_debris", getItemHolder(registries, BlockItemIds.ANCIENT_DEBRIS.item()))
+                .withEnergy(150)
+                .withTime(DRReplicateRecipeBuilder.TIME_HIGH);
     }
 
     protected Holder.Reference<Item> getItemHolder(HolderLookup.Provider registries, ResourceKey<Item> key) {

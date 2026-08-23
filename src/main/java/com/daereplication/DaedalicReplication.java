@@ -7,14 +7,11 @@ import com.daereplication.items.DRItemIds;
 import com.daereplication.recipe.DRRecipeTypes;
 import com.daereplication.recipe.ReplicationLearnRecipe;
 import com.daereplication.recipe.ReplicationReplicateRecipe;
-import com.daereplication.registry.DRRegistries;
-import com.daereplication.util.ReplicatorUtil;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
@@ -50,6 +47,7 @@ public class DaedalicReplication implements ModInitializer {
 
 		ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, DRDataComponents.REPLICATION_BLOCK_STORAGE);
 		ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, DRDataComponents.GENERIC_ENERGY_STORAGE);
+		ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, DRDataComponents.UPGRADE_STORAGE);
 	}
 
 	public static Identifier id(String path) {

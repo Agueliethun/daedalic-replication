@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NDN",
+    "EoE",
+    "NDN"
+  ],
+  "key": {
+    "N": "minecraft:netherite_ingot",
+    "E": "minecraft:emerald",
+    "D": "minecraft:diamond",
+    "o": "daedalic-replication:replication_core"
+  },
+  "result": {
+    "id": "daedalic-replication:upgrade"
+  }
+}

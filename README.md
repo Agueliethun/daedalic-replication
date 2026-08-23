@@ -11,7 +11,7 @@ In addition, you've got your stones, dirt, logs, and similar blocks.
 
 Enchanting a model with fortune gives a chance of double output, while efficiency reduces learn/replicate time and energy usage.
 
-JEI compatible. 
+JEI compatible.
 
 ## Roadmap
 - REI support

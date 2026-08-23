@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,31 +27,14 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class ReplicatorBlock extends BaseEntityBlock {
+public class ReplicatorBlock extends MachineBlock {
 
     public static final BooleanProperty HAS_MODEL = BooleanProperty.create("has_model");
 
     protected ReplicatorBlock(Properties properties) {
         super(properties);
+
         registerDefaultState(defaultBlockState().setValue(HAS_MODEL, false));
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
-        super.setPlacedBy(level, pos, state, by, itemStack);
-    }
-
-    @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
-        BlockEntity be = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (be instanceof ReplicatorBlockEntity) {
-            ItemStack drop = new ItemStack(this.asItem());
-            GenericEnergyStorage component = new GenericEnergyStorage(((ReplicatorBlockEntity)be).getEnergyStorage().getAmount());
-            drop.set(DRDataComponents.GENERIC_ENERGY_STORAGE, component);
-            return List.of(drop);
-        }
-
-        return List.of(new ItemStack(this.asItem()));
     }
 
     @Override
@@ -60,9 +44,7 @@ public class ReplicatorBlock extends BaseEntityBlock {
     }
 
     public static int getLuminance(BlockState blockState) {
-        boolean hasModel = blockState.getValue(ReplicatorBlock.HAS_MODEL);
-
-        return hasModel ? 12 : 0;
+        return blockState.getValue(ReplicatorBlock.HAS_MODEL) ? 12 : 0;
     }
 
     @Override
@@ -78,14 +60,5 @@ public class ReplicatorBlock extends BaseEntityBlock {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, DRBlockEntities.REPLICATOR_BLOCK_ENTITY, ReplicatorBlockEntity::serverTick);
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ReplicatorBlockEntity replicator) {
-            player.openMenu(replicator);
-        }
-
-        return InteractionResult.SUCCESS;
     }
 }

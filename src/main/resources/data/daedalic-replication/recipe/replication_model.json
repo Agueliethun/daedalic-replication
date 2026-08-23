@@ -1,15 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "C#.",
+    " #.",
     "#o#",
-    "R#C"
+    "R# "
   ],
   "key": {
-    "C": "minecraft:crying_obsidian",
     "#": "minecraft:gold_ingot",
     ".": "minecraft:redstone",
-    "o": "minecraft:ender_pearl",
+    "o": "daedalic-replication:replication_core",
     "R": "minecraft:redstone_block"
   },
   "result": {

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CqC",
+    "qoq",
+    "CqC"
+  ],
+  "key": {
+    "C": "minecraft:crying_obsidian",
+    "q": "minecraft:quartz",
+    "o": "minecraft:ender_pearl"
+  },
+  "result": {
+    "id": "daedalic-replication:replication_core"
+  }
+}

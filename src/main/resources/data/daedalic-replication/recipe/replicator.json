@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": "minecraft:redstone_block",
-    "o": "minecraft:ender_pearl",
+    "o": "daedalic-replication:replication_core",
     "=": "minecraft:gold_ingot",
     "N": "minecraft:netherite_block"
   },

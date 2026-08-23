@@ -3,30 +3,22 @@ package com.daereplication.blockentities;
 import com.daereplication.DaedalicReplication;
 import com.daereplication.blocks.ReplicatorBlock;
 import com.daereplication.component.DRDataComponents;
-import com.daereplication.component.GenericEnergyStorage;
 import com.daereplication.component.ReplicationBlockStorage;
+import com.daereplication.component.UpgradeStorage;
 import com.daereplication.items.DRItemIds;
+import com.daereplication.items.UpgradeItem;
+import com.daereplication.menu.MachineMenu;
 import com.daereplication.menu.ReplicatorMenu;
 import com.daereplication.recipe.*;
 import com.daereplication.util.ReplicatorUtil;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.*;
-import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,28 +29,25 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.random.RandomGenerator;
 
-public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
-    private static final float ENERGY_DISPLAY_FACTOR = 16384L / (float)ReplicatorUtil.MACHINE_MAX_ENERGY;
-
-    private static final long CAPACITY = ReplicatorUtil.MACHINE_MAX_ENERGY;
-    private static final long MAX_TRANSFER = 256000L;
+public class ReplicatorBlockEntity extends MachineBlockEntity {
 
     public static final int SLOT_INPUT = 0;
     public static final int SLOT_LEARNER = 1;
     public static final int SLOT_OUTPUT = 2;
+
+    public static final int SLOT_UPGRADE_MAIN_1 = 3;
+    public static final int SLOT_UPGRADE_SECONDARY_1 = 4;
+    public static final int SLOT_UPGRADE_SECONDARY_2 = 5;
 
     public static final int DATA_LEARN_PROGRESS = 0;
     public static final int DATA_LEARN_TOTAL_TIME = 1;
@@ -66,8 +55,6 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
     public static final int DATA_REPLICATE_TOTAL_TIME = 3;
     public static final int DATA_POWER_AMOUNT = 4;
     public static final int DATA_POWER_MAX = 5;
-
-    protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
 
     private int learnProgress;
     private int learnMax;
@@ -77,26 +64,27 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
     private final RecipeManager.CachedCheck<ReplicationLearnRecipeInput, ReplicationLearnRecipe> learnQuickCheck;
     private final RecipeManager.CachedCheck<ReplicationReplicateRecipeInput, ReplicationReplicateRecipe> replicateQuickCheck;
 
-    protected final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(CAPACITY, MAX_TRANSFER, MAX_TRANSFER) {
-        @Override
-        protected void onFinalCommit() {
-            setChanged();
-        }
-    };
-
     public ReplicatorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(DRBlockEntities.REPLICATOR_BLOCK_ENTITY, worldPosition, blockState);
+        super(DRBlockEntities.REPLICATOR_BLOCK_ENTITY, worldPosition, blockState, 6);
         this.learnQuickCheck = RecipeManager.createCheck(DRRecipeTypes.REPLICATION_LEARN_RECIPE_TYPE);
         this.replicateQuickCheck = RecipeManager.createCheck(DRRecipeTypes.REPLICATION_REPLICATE_RECIPE_TYPE);
     }
 
     @Override
+    public Map<Integer, UpgradeItem.SlotType> getUpgradeSlots() {
+        Map<Integer, UpgradeItem.SlotType> upgradeSlots = new HashMap<>();
+
+        upgradeSlots.put(SLOT_UPGRADE_MAIN_1, UpgradeItem.SlotType.SLOT_MAIN);
+        upgradeSlots.put(SLOT_UPGRADE_SECONDARY_1, UpgradeItem.SlotType.SLOT_SECONDARY);
+        upgradeSlots.put(SLOT_UPGRADE_SECONDARY_2, UpgradeItem.SlotType.SLOT_SECONDARY);
+
+        return upgradeSlots;
+    }
+
+    @Override
     protected void loadAdditional(final ValueInput input) {
         super.loadAdditional(input);
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(input, this.items);
 
-        this.energyStorage.amount = input.getLongOr("energyAmount", 0L);
         this.learnProgress = input.getIntOr("learnProgress", 0);
         this.replicateProgress = input.getIntOr("replicateProgress", 0);
         this.learnMax = input.getIntOr("learnMax", 0);
@@ -106,9 +94,7 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
     @Override
     protected void saveAdditional(final ValueOutput output) {
         super.saveAdditional(output);
-        ContainerHelper.saveAllItems(output, this.items);
 
-        output.putLong("energyAmount", this.energyStorage.amount);
         output.putInt("learnProgress", this.learnProgress);
         output.putInt("replicateProgress", this.replicateProgress);
     }
@@ -116,41 +102,6 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
     @Override
     protected Component getDefaultName() {
         return Component.translatable("block.daedalic-replication.replicator");
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return saveWithoutMetadata(registryLookup);
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentGetter components) {
-        super.applyImplicitComponents(components);
-
-        GenericEnergyStorage storage = components.get(DRDataComponents.GENERIC_ENERGY_STORAGE);
-        if (storage != null && storage.power() > 0) {
-            this.energyStorage.amount = storage.power();
-            setChanged();
-        }
-    }
-
-    public EnergyStorage getEnergyStorage() {
-        return energyStorage;
-    }
-
-    @Override
-    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-
-        if (level == null) return;
-
-        BlockState state = getBlockState();
-        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
 
     public static void serverTick(final Level level, final BlockPos pos, BlockState state, final ReplicatorBlockEntity entity) {
@@ -174,24 +125,28 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
                 DRDataComponents.REPLICATION_BLOCK_STORAGE,
                 new ReplicationBlockStorage(0, 0.0, itemHolder)
         );
-        int numStored = Math.max(0, storage.numberIngested());
 
         Holder<Enchantment> fortune = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE);
         Holder<Enchantment> efficiency = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY);
 
         int fortuneLevel = 0;
-        int efficiencyLevel = 0;
+        int enchEfficiencyLvl = 0;
         ItemEnchantments enchantments = learner.get(DataComponents.ENCHANTMENTS);
         if (enchantments != null) {
             fortuneLevel = enchantments.getLevel(fortune);
-            efficiencyLevel = enchantments.getLevel(efficiency);
+            enchEfficiencyLvl = enchantments.getLevel(efficiency);
         }
 
-        entity.doLearn(learner, storage, numStored, efficiencyLevel);
-        entity.doReplicate(learner, storage, numStored, fortuneLevel, efficiencyLevel);
+        Map<UpgradeStorage, Integer> storages = entity.getUpgradeStorages();
+        int upgradeLearn = entity.getLearnBonus(storages);
+        float upgradeEfficiency = entity.getEfficiencyBonus(storages);
+        float upgradeSpeed = entity.getSpeedBonus(storages);
+
+        entity.doLearn(learner, storage, upgradeLearn, upgradeEfficiency, upgradeSpeed, enchEfficiencyLvl);
+        entity.doReplicate(learner, storage, upgradeEfficiency, upgradeSpeed, enchEfficiencyLvl, fortuneLevel);
     }
 
-    private void doLearn(ItemStack learner, ReplicationBlockStorage storage, int numStored, int efficiencyLevel) {
+    private void doLearn(ItemStack learner, ReplicationBlockStorage storage, int upgradeLearn, float upgradeEfficiency, float upgradeSpeed, int enchEfficiencyLvl) {
         ItemStack input = getItem(SLOT_INPUT);
         if (input.isEmpty() || input.getCount() <= 0) {
             learnProgress = 0;
@@ -215,17 +170,19 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
             return;
         }
 
-        double efficiencyValue = ReplicatorUtil.getEfficiencyForEnchantLevel(efficiencyLevel);
-        this.learnMax = (int)Math.ceil(recipe.getTime() * efficiencyValue);
+        double efficiencyValue = ReplicatorUtil.getEfficiencyForEnchantLevel(enchEfficiencyLvl);
+        this.learnMax = (int)Math.ceil(recipe.getTime() * efficiencyValue / upgradeSpeed);
 
-        int energyRequired = (int)Math.ceil(recipe.getEnergy() * efficiencyValue);
+        int energyRequired = (int)Math.ceil(recipe.getEnergy() * efficiencyValue / upgradeEfficiency);
         if (!extractEnergy(energyRequired)) {
             return;
         }
 
+        int numStored = Math.max(0, storage.numberIngested());
+
         learnProgress++;
         if (learnProgress >= learnMax) {
-            int newNumStored = numStored + recipe.getProgress();
+            int newNumStored = numStored + recipe.getProgress() + upgradeLearn;
             double efficiency = 0.0;
 
             ItemStack result = recipe.assemble(recipeInput);
@@ -245,9 +202,9 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
         }
     }
 
-    private void doReplicate(ItemStack learner, ReplicationBlockStorage storage, int numStored, int fortuneLevel, int efficiencyLevel) {
+    private void doReplicate(ItemStack learner, ReplicationBlockStorage storage, float upgradeEfficiency, float upgradeSpeed, int efficiencyLevel, int fortuneLevel) {
         ReplicationReplicateRecipeInput recipeInput = new ReplicationReplicateRecipeInput(learner);
-        Optional<RecipeHolder<ReplicationReplicateRecipe>> holder = this.replicateQuickCheck.getRecipeFor(recipeInput, (ServerLevel)level);
+        Optional<RecipeHolder<ReplicationReplicateRecipe>> holder = this.replicateQuickCheck.getRecipeFor(recipeInput, (ServerLevel) level);
 
         double efficiencyValue = ReplicatorUtil.getEfficiencyForEnchantLevel(efficiencyLevel);
         double fortuneChance = ReplicatorUtil.getDoubleChanceForFortuneLevel(fortuneLevel);
@@ -260,6 +217,7 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
 
         ReplicationReplicateRecipe recipe = holder.get().value();
 
+        int numStored = Math.max(0, storage.numberIngested());
         double efficiency = ReplicatorUtil.getEfficiency(recipe, numStored);
         if (efficiency <= 0) {
             replicateProgress = 0;
@@ -272,8 +230,8 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
             return;
         }
 
-        int energyRequired = (int)Math.ceil(recipe.getEnergy() * efficiencyValue / efficiency);
-        this.replicateMax = (int)Math.ceil(recipe.getTime() * efficiencyValue / efficiency);
+        int energyRequired = (int) Math.ceil(recipe.getEnergy() * efficiencyValue / (efficiency * upgradeEfficiency));
+        this.replicateMax = (int) Math.ceil(recipe.getTime() * efficiencyValue / (efficiency * upgradeSpeed));
 
         if (!extractEnergy(energyRequired)) {
             return;
@@ -297,40 +255,9 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
         }
     }
 
-    public boolean insertEnergy(long amount) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            long amountInserted = this.energyStorage.insert(amount, transaction);
-            if (amountInserted == amount) {
-                transaction.commit();
-                setChanged();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean extractEnergy(long amount) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            long amountExtracted = this.energyStorage.extract(amount, transaction);
-            if (amountExtracted == amount) {
-                transaction.commit();
-                setChanged();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public int[] getSlotsForFace(Direction direction) {
-        return new int[] {SLOT_INPUT, SLOT_LEARNER, SLOT_OUTPUT};
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
-        return canPlaceItem(slot, itemStack);
+        return new int[] {SLOT_INPUT, SLOT_LEARNER, SLOT_OUTPUT, SLOT_UPGRADE_MAIN_1, SLOT_UPGRADE_SECONDARY_1, SLOT_UPGRADE_SECONDARY_2};
     }
 
     @Override
@@ -340,9 +267,8 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
 
     public boolean isInput(ItemStack itemStack) {
         ItemStack learner = this.getItem(SLOT_LEARNER);
-        ItemStack input = getItem(SLOT_INPUT);
 
-        ReplicationLearnRecipeInput recipeInput = new ReplicationLearnRecipeInput(learner, input);
+        ReplicationLearnRecipeInput recipeInput = new ReplicationLearnRecipeInput(learner, itemStack);
         Optional<RecipeHolder<ReplicationLearnRecipe>> holder = this.learnQuickCheck.getRecipeFor(recipeInput, (ServerLevel)level);
 
         if (holder.isPresent()) {
@@ -355,7 +281,7 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
 
     @Override
     public int getContainerSize() {
-        return 3;
+        return 6;
     }
 
     @Override
@@ -379,26 +305,16 @@ public class ReplicatorBlockEntity extends BaseContainerBlockEntity implements W
 
     @Override
     public boolean canTakeItem(Container into, int slot, ItemStack itemStack) {
-        return WorldlyContainer.super.canTakeItem(into, slot, itemStack);
+        return slot == SLOT_OUTPUT;
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+    public @Nullable MachineMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new ReplicatorMenu(containerId, inventory, this, dataAccess);
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+    protected MachineMenu createMenu(int containerId, Inventory inventory) {
         return new ReplicatorMenu(containerId, inventory);
     }
 

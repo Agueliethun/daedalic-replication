@@ -1,4 +1,4 @@
-package com.daereplication.client.rei;
+package com.daereplication.rei;
 
 import com.daereplication.component.DRDataComponents;
 import com.daereplication.component.ReplicationBlockStorage;
@@ -11,25 +11,15 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.util.CollectionUtils;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import me.shedaniel.rei.api.common.util.EntryStacks;
-import me.shedaniel.rei.plugin.common.displays.DefaultOxidizingDisplay;
-import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReplicationLearnDisplay extends BasicDisplay {
     public static final DisplaySerializer<ReplicationLearnDisplay> SERIALIZER = DisplaySerializer.of(
@@ -54,7 +44,9 @@ public class ReplicationLearnDisplay extends BasicDisplay {
     private final int energy;
     private final int time;
 
-    public ReplicationLearnDisplay(ReplicationLearnRecipe recipe) {
+    public ReplicationLearnDisplay(RecipeHolder<ReplicationLearnRecipe> holder) {
+        ReplicationLearnRecipe recipe = holder.value();
+
         EntryIngredient mainIngredient = EntryIngredients.ofIngredient(recipe.getInput());
         EntryIngredient learner = EntryIngredients.of(DRItemIds.REPLICATION_MODEL);
 
@@ -81,7 +73,7 @@ public class ReplicationLearnDisplay extends BasicDisplay {
 
     @Override
     public CategoryIdentifier<?> getCategoryIdentifier() {
-        return DRREIClientPlugin.LEARN;
+        return DRREICommonPlugin.LEARN;
     }
 
     @Override

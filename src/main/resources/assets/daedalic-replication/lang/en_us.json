@@ -1,5 +1,15 @@
 {
   "item.daedalic-replication.replication_model": "Replication Model",
+  "item.daedalic-replication.replication_core": "Replication Core",
+
+  "item.daedalic-replication.upgrade": "Empty Upgrade",
+  "item.daedalic-replication.upgrade_master": "Master Upgrade",
+  "item.daedalic-replication.upgrade_efficiency": "Efficiency Upgrade II",
+  "item.daedalic-replication.upgrade_efficiency_small": "Efficiency Upgrade",
+  "item.daedalic-replication.upgrade_speed": "Speed Upgrade II",
+  "item.daedalic-replication.upgrade_speed_small": "Speed Upgrade",
+  "item.daedalic-replication.upgrade_learn": "Learning Upgrade",
+
   "item.daedalic-replication.replication_model.info.number": "%1$s ingested: %2$s",
   "item.daedalic-replication.replication_model.info.efficiency": "Efficiency: %1$s",
   "item.daedalic-replication.replication_model.info.erase": "Crouch + Right Click to reset data.",
@@ -10,5 +20,19 @@
 
   "block.daedalic-replication.replicator": "Replicator",
 
-  "item.daedalic-replication.generic_energy.info": "%1$s EU stored"
+  "item.daedalic-replication.generic_energy.info": "%1$s EU stored",
+
+  "item.upgrade.storage.learn": "Learn Bonus: %1$s",
+  "item.upgrade.storage.master": "Speed: +%1$s, Efficiency: +%2$s",
+  "item.upgrade.storage.speed.small": "Speed: +%1$s",
+  "item.upgrade.storage.efficiency.small": "Efficiency: +%1$s",
+  "item.upgrade.storage.speed": "Speed: +%1$s, Efficiency: %2$s",
+  "item.upgrade.storage.efficiency": "Efficiency: +%1$s, Speed: %2$s",
+  "item.upgrade.stacks.max": "Max Stacks: %1$s",
+
+  "deadalic-replication.gui.power": "%1$s/%2$s",
+  "deadalic-replication.gui.recipes.seeAll": "See All Recipes",
+
+  "daedalic-replication.gui.time": "Time: %1$s ticks",
+  "deadalic-replication.gui.power.hint": "Energy: %1$s/tick"
 }

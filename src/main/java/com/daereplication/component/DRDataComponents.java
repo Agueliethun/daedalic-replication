@@ -22,4 +22,10 @@ public class DRDataComponents {
             Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "generic_energy_storage"),
             DataComponentType.<GenericEnergyStorage>builder().persistent(GenericEnergyStorage.CODEC).build()
     );
+
+    public static final DataComponentType<UpgradeStorage> UPGRADE_STORAGE = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(DaedalicReplication.MOD_ID, "upgrade_storage"),
+            DataComponentType.<UpgradeStorage>builder().persistent(UpgradeStorage.CODEC).build()
+    );
 }
